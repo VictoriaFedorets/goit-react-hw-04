@@ -1,0 +1,12 @@
+.card {
+  border: 1px solid #ddd; /* Optional, border around the card */
+  border-radius: 8px; /* Optional, rounded corners */
+  overflow: hidden; /* Optional, ensures image doesn't overflow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional, shadow for the card */
+  max-width: 300px; /* Optional, set a max width for the card */
+}
+
+.image {
+  width: 100%; /* Ensures the image fits within the card */
+  height: auto; /* Maintains aspect ratio of the image */
+}

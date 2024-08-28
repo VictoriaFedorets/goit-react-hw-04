@@ -1,17 +1,17 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 export default function SearchBar({ onSubmit }) {
   const [query, setQuery] = useState("");
 
-  const handleChanch = evt => {
+  const handleChange = evt => {
     setQuery(evt.target.value);
   };
 
   const handleSubmit = evt => {
     evt.preventDefault();
     if (!query.trim()) {
-      return toast.error("Can not be empty");
+      return alert("Search query cannot be empty");
     }
     onSubmit(query);
     setQuery("");
@@ -22,11 +22,11 @@ export default function SearchBar({ onSubmit }) {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          // autocomplete="off"
-          // autofocus
+          autoComplete="off"
+          autoFocus
           placeholder="Search images and photos"
           value={query}
-          onChange={handleChanch}
+          onChange={handleChange}
         />
         <button type="submit">Search</button>
       </form>
