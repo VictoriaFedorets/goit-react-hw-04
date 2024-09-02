@@ -5,6 +5,8 @@ import SearchBar from "../SearchBar/SearchBar";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "../ImageModal/ImageModal";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -14,7 +16,8 @@ export default function App() {
   const [error, setError] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalImg, setModalImg] = useState(null);
 
   useEffect(() => {
     if (!query) {
@@ -26,14 +29,18 @@ export default function App() {
       setError(null);
 
       try {
-        const { results: photos, total_results } = await getPhotos(query, page);
+        const {
+          results: photos,
+          total_pages,
+          per_page,
+        } = await getPhotos(query, page);
 
         if (!photos.length) {
           setIsEmpty(true);
         }
         setImages(prevImages => [...prevImages, ...photos]);
         setIsEmpty(false);
-        setIsVisible(page < total_results);
+        setIsVisible(page < Math.ceil(total_pages));
       } catch (error) {
         setError(error);
       } finally {
@@ -53,12 +60,39 @@ export default function App() {
     setIsVisible(false);
   };
 
+  const onLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  const openModal = image => {
+    console.log("Opening modal with image:", image);
+    setIsOpen(true);
+    setModalImg(image);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalImg(null);
+  };
+
   return (
     <div>
       <SearchBar onSubmit={onHandleSubmit} />
 
-      {images.length > 0 && <ImageGallery images={images} />}
-      {/* {!images.length && !isEmpty && <ErrorMessage textAlign="center">Let`s begin search 🔎</Text>} */}
+      {images.length > 0 && (
+        <ImageGallery images={images} onClick={openModal} />
+      )}
+      {isVisible && (
+        <LoadMoreBtn onClick={onLoadMore} disabled={isLoading}>
+          {isLoading ? "loading" : "load more"}
+        </LoadMoreBtn>
+      )}
+      {/* {images.length > 0 && !isVisible && (
+        <LoadMoreBtn onClick={onLoadMore}>Load more</LoadMoreBtn>
+      )} */}
+      {!images.length && !isEmpty && (
+        <ErrorMessage textAlign="center">Let`s begin search 🔎</ErrorMessage>
+      )}
       {isLoading && <Loader />}
       {error && (
         <ErrorMessage textAlign="center">
@@ -70,6 +104,7 @@ export default function App() {
           Sorry. There are no images ... 😭
         </ErrorMessage>
       )}
+      <ImageModal isOpen={modalIsOpen} onClose={closeModal} image={modalImg} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ const BASE_URL = "https://api.unsplash.com/search/photos";
 export const getPhotos = async (query, page) => {
   const response = await axios.get(BASE_URL, {
     params: {
+      orientation: "landscape",
       client_id: API_KEY,
       query,
       page,

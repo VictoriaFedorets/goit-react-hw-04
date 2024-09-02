@@ -1,4 +1,4 @@
-import style from "./ErrorMessage.module.css";
+import css from "./ErrorMessage.module.css";
 
 export default function ErrorMessage({
   children,
@@ -8,9 +8,9 @@ export default function ErrorMessage({
   return (
     <p
       className={[
-        style.text,
-        style[textAlign],
-        style[`marginBottom${marginBottom}`],
+        css.text,
+        css[textAlign],
+        css[`marginBottom${marginBottom}`],
       ].join(" ")}
       style={{ marginBottom }}
     >

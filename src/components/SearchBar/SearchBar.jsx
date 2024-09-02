@@ -1,5 +1,6 @@
 import { useState } from "react";
-// import toast from "react-hot-toast";
+import css from "./SearchBar.module.css";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function SearchBar({ onSubmit }) {
   const [query, setQuery] = useState("");
@@ -10,17 +11,19 @@ export default function SearchBar({ onSubmit }) {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    if (!query.trim()) {
-      return alert("Search query cannot be empty");
+    if (query.trim() === "") {
+      toast.error("Search query cannot be empty");
+      return;
     }
     onSubmit(query);
     setQuery("");
   };
 
   return (
-    <header>
-      <form onSubmit={handleSubmit}>
+    <header className={css.header}>
+      <form className={css.form} onSubmit={handleSubmit}>
         <input
+          className={css.input}
           type="text"
           autoComplete="off"
           autoFocus
@@ -28,8 +31,22 @@ export default function SearchBar({ onSubmit }) {
           value={query}
           onChange={handleChange}
         />
-        <button type="submit">Search</button>
+        <button className={css.btnSearch} type="submit">
+          Search
+        </button>
       </form>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          className: "",
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            margin: "80px",
+            color: "#713200",
+          },
+        }}
+      />
     </header>
   );
 }
